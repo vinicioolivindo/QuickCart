@@ -3,7 +3,7 @@ import { ShoppingCart, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const Cart = () => {
-    const [cartActive, setCartActive] = useState(true);
+    const [cartActive, setCartActive] = useState(false);
 
     useEffect(() => {
         document.body.style.overflow = cartActive ? "hidden" : "auto";
@@ -13,7 +13,7 @@ const Cart = () => {
         <div>
             <div
                 className={clsx(
-                    "absolute h-4/5 w-auto md:w-80 bg-zinc-900 top-1/2 -translate-y-1/2 rounded-s-2xl shadow-lg backdrop-blur-md transition-all duration-300",
+                    "absolute z-10 h-4/5 w-auto md:w-80 bg-zinc-900 top-1/2 -translate-y-1/2 rounded-s-2xl shadow-lg backdrop-blur-md transition-all duration-300",
                     cartActive ? "right-0 show" : "-right-80"
                 )}
             >
