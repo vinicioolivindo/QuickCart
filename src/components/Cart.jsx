@@ -4,7 +4,7 @@ import { ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import ItemProduct from "./ItemProduct";
 
-const Cart = ({ products, setMyCart }) => {
+const Cart = ({ products, setMyCart, newItemAdd }) => {
     const [cartActive, setCartActive] = useState(false);
     const [totalValue, setTotalValue] = useState(0);
 
@@ -47,8 +47,8 @@ const Cart = ({ products, setMyCart }) => {
         <div>
             <div
                 className={clsx(
-                    "absolute z-10 h-4/5 w-72 md:w-80 bg-zinc-900 top-1/2 -translate-y-1/2 rounded-s-2xl shadow-lg backdrop-blur-md transition-all duration-300 overflow-hidden",
-                    cartActive ? "right-0 show" : "-right-80"
+                    "fixed z-50 h-full w-full md:w-80 bg-zinc-900 top-0 md:top-1/2 md:-translate-y-1/2 rounded-md shadow-lg transition-all duration-300 overflow-hidden",
+                    cartActive ? "right-0" : "-right-full md:-right-80"
                 )}
             >
                 <div className="py-4 px-5 flex items-center justify-between border-b border-gray-700">
@@ -58,10 +58,14 @@ const Cart = ({ products, setMyCart }) => {
                     <button
                         aria-label="Fechar carrinho"
                         className="text-gray-200"
-                        onClick={() => setCartActive(false)}
+                        onClick={() => {
+                            setCartActive(false);
+                        }}
                     >
                         <X />
                     </button>
+
+
                 </div>
 
                 <div className="flex flex-col gap-4 p-4 h-full overflow-y-auto">
@@ -95,14 +99,27 @@ const Cart = ({ products, setMyCart }) => {
             </div>
 
             {!cartActive && (
-                <button
-                    aria-label="Abrir carrinho"
-                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-zinc-900 p-2 rounded-s-lg"
-                    onClick={() => setCartActive(true)}
-                >
-                    <ShoppingCart className="text-gray-300 w-8 h-8 transition-all duration-300 hover:rotate-6 hover:scale-125" />
-                </button>
+                <div className="fixed z-50 right-4 bottom-4 md:right-2 md:top-1/2 md:-translate-y-1/2 flex flex-col items-center">
+                    <button
+                        aria-label="Abrir carrinho"
+                        className="bg-zinc-900 p-3 rounded-lg relative"
+                        onClick={() => setCartActive(true)}
+                    >
+                        <ShoppingCart className="text-gray-300 w-8 h-8 transition-all duration-300 hover:rotate-6 hover:scale-125" />
+                        {newItemAdd && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce">
+                                +
+                            </span>
+                        )}
+                    </button>
+                    {newItemAdd && (
+                        <p className="text-xs text-gray-400 mt-1">Novo item adicionado!</p>
+                    )}
+                </div>
             )}
+
+
+
         </div>
     );
 };

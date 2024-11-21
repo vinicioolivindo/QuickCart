@@ -11,7 +11,7 @@ const ItemProduct = ({ styleGalery, title, image, price, onClickCart, itemInCart
             <div className={clsx(" bg-white rounded-lg p-4 flex items-center justify-center relative",
                 itemInCart ? "w-20 h-20" : "w-44 h-44"
             )}>
-                <button className={clsx("flex font-bold absolute z-30 bottom-1 right-1 hover:text-purple-700 transition-all duration-300 hover:rotate-6 hover:scale-125",
+                <button className={clsx("flex font-bold absolute z-10 bottom-1 right-1 hover:text-purple-700 transition-all duration-300 hover:rotate-6 hover:scale-125",
                     itemInCart ? "hidden" : null
                 )}
                     onClick={onClickCart}>
@@ -29,7 +29,7 @@ const ItemProduct = ({ styleGalery, title, image, price, onClickCart, itemInCart
                 )}>
                     <h2 className={clsx("text-2xl font-bold",
                         itemInCart ? "text-gray-100" : "text-gray-900",
-                        styleGalery ? "absolute -bottom-4" : ""
+                        styleGalery ? "-bottom-4" : ""
                     )}><span className="text-sm">R$</span>{price}</h2>
 
                     {itemInCart ? (
