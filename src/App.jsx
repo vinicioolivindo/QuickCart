@@ -9,10 +9,13 @@ import ApiProduct from "./components/ApiProduct";
 function App() {
   const [styleGrid, setStyleGrid] = useState(true);
   const [products, setProducts] = useState([]);
+  const [productsFilter, setProductsFilter] = useState([]);
   const [myCart, setMyCart] = useState([]);
-  const [categoryClick, setCategoryClick] = useState();
+  const [categoryClick, setCategoryClick] = useState(null);
   const [itemAdd, setItemAdd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // Novo estado para a busca
 
+  // Exibe notificação temporária quando um item é adicionado
   useEffect(() => {
     if (itemAdd) {
       const timer = setTimeout(() => setItemAdd(false), 3000); // Reseta o estado
@@ -20,16 +23,36 @@ function App() {
     }
   }, [itemAdd]);
 
-
+  // Carrega todos os produtos ao montar o componente
   useEffect(() => {
-    ApiProduct
-      .get(`products/category/${categoryClick}`)
-      .then((response) => setProducts(response.data))
-      .catch((err) => {
-        alert("algo deu erro" + err);
-      });
-  }, [categoryClick]);
+    ApiProduct.get("products")
+      .then((response) => {
+        setProducts(response.data);
+        setProductsFilter(response.data); // Inicializa o filtro com todos os produtos
+      })
+      .catch((err) => alert("Erro ao carregar produtos: " + err));
+  }, []);
 
+  // Filtra os produtos por categoria e busca
+  useEffect(() => {
+    let filteredProducts = [...products];
+
+    if (categoryClick) {
+      filteredProducts = filteredProducts.filter(
+        (prod) => prod.category === categoryClick
+      );
+    }
+
+    if (searchQuery.trim()) {
+      filteredProducts = filteredProducts.filter((prod) =>
+        prod.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setProductsFilter(filteredProducts);
+  }, [categoryClick, searchQuery, products]);
+
+  // Adiciona um produto ao carrinho
   const handleAddToCart = (produto) => {
     setMyCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === produto.id);
@@ -46,16 +69,21 @@ function App() {
     });
   };
 
+  // Atualiza a busca
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const query = e.target.elements.query.value.trim();
+    setSearchQuery(query);
+    
+  };
 
   return (
     <div className="relative w-screen sm:h-screen flex flex-col md:flex-row items-start bg-gray-100">
-      <Header onClickProduct={(product) => setCategoryClick(product)} />
-      <Cart
-        products={myCart}
-        setMyCart={setMyCart}
-        newItemAdd={itemAdd}
+      <Header
+        onSubmit={handleSearch}
+        onClickProduct={(product) => setCategoryClick(product)}
       />
-
+      <Cart products={myCart} setMyCart={setMyCart} newItemAdd={itemAdd} />
 
       <div
         className={clsx(
@@ -81,10 +109,12 @@ function App() {
         <div
           className={clsx(
             "flex-1 h-full p-4 overflow-y-auto",
-            styleGrid ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" : "flex flex-col"
+            styleGrid
+              ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+              : "flex flex-col"
           )}
         >
-          {products.map((produto) => (
+          {productsFilter.map((produto) => (
             <ItemProduct
               image={produto.image}
               price={produto.price}
@@ -92,6 +122,7 @@ function App() {
               styleGalery={styleGrid}
               key={produto.id}
               onClickCart={() => handleAddToCart(produto)}
+              searchQuery={searchQuery} // Passa o estado de busca para o componente
             />
           ))}
         </div>

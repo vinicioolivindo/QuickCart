@@ -2,8 +2,14 @@ import clsx from "clsx";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 // eslint-disable-next-line react/prop-types
-const ItemProduct = ({ styleGalery, title, image, price, onClickCart, itemInCart, qntProduct, onClickMinus, onClickPlus }) => {
+const ItemProduct = ({ styleGalery, title, image, price, onClickCart, itemInCart, qntProduct, onClickMinus, onClickPlus, searchQuery }) => {
 
+    // Função para destacar a parte pesquisada
+    const getHighlightedTitle = (text, query) => {
+        if (!query) return text; // Se não houver busca, retorna o título original
+        const regex = new RegExp(`(${query})`, "gi"); // Cria uma regex para o termo pesquisado
+        return text.replace(regex, `<span class="font-bold text-purple-700">$1</span>`); // Envolve a parte destacada
+    }
     return (
         <div className={clsx("max-w-44 flex",
             styleGalery ? "flex-col items-center" : "flex-row max-w-4xl gap-3 "
@@ -20,9 +26,14 @@ const ItemProduct = ({ styleGalery, title, image, price, onClickCart, itemInCart
                 <img className="max-w-full max-h-full object-contain" src={image} alt={`Imagem de ${title}`} />
             </div>
             <div className="flex-1">
-                <h3 className={clsx("text-sm line-clamp-2 ",
-                    itemInCart ? "text-white" : "text-gray-800"
-                )}>{title}</h3>
+                <h3
+                    className={clsx("text-sm line-clamp-2 ",
+                        itemInCart ? "text-white" : "text-gray-800"
+                    )}
+                    dangerouslySetInnerHTML={{
+                        __html: getHighlightedTitle(title, searchQuery),
+                    }}
+                ></h3>
 
                 <div className={clsx("flex justify-between",
                     itemInCart ? "mt-2" : null
