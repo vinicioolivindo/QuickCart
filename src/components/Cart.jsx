@@ -93,7 +93,10 @@ const Cart = ({ products, setMyCart, newItemAdd }) => {
                 <div className="absolute bottom-0 w-full py-4 px-5 border-t border-gray-700">
                     <div className="flex justify-between">
                         <h2 className="text-gray-300 text-xl">Total: </h2>
-                        <h1 className="text-2xl text-gray-50">R$ {totalValue}</h1>
+                        <h1 className="text-2xl text-gray-50">
+                            R$ {totalValue.toFixed(2)} {/* Formatação para duas casas decimais */}
+                        </h1>
+
                     </div>
                 </div>
             </div>

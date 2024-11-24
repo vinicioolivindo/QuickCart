@@ -74,7 +74,6 @@ function App() {
     e.preventDefault();
     const query = e.target.elements.query.value.trim();
     setSearchQuery(query);
-    
   };
 
   return (
